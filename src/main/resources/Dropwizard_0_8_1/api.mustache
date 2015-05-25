@@ -1,7 +1,6 @@
 package {{package}};
 
 import {{modelPackage}}.*;
-import {{servicesPackage}}.*;
 
 import com.wordnik.swagger.annotations.ApiParam;
 
@@ -26,14 +25,22 @@ import com.codahale.metrics.annotation.Timed;
 {{#operations}}
 public class {{classname}} {
 
-  private {{classname}}Service {{classVarName}}Service;
+  private I{{classname}}Service {{classVarName}}Service;
 
-  public {{classname}}Service get{{classname}}Service() {
+  public I{{classname}}Service get{{classname}}Service() {
     return {{classVarName}}Service;
   }
 
-  public void set{{classname}}Service({{classname}}Service {{classVarName}}Service) {
+  public void set{{classname}}Service(I{{classname}}Service {{classVarName}}Service) {
     this.{{classVarName}}Service = {{classVarName}}Service;
+  }
+
+  public interface I{{classname}}Service {
+
+  {{#operation}}
+  public {{#returnContainer}}{{{returnContainer}}}<{{/returnContainer}}{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}{{#returnContainer}}>{{/returnContainer}} {{nickname}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+  {{/operation}}
+
   }
 
   {{#operation}}
