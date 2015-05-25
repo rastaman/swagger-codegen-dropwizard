@@ -1,6 +1,7 @@
 package {{package}};
 
 import {{modelPackage}}.*;
+import {{servicesPackage}}.*;
 
 import com.wordnik.swagger.annotations.ApiParam;
 
@@ -24,6 +25,18 @@ import com.codahale.metrics.annotation.Timed;
 @com.wordnik.swagger.annotations.Api(value = "/{{baseName}}", description = "the {{baseName}} API")
 {{#operations}}
 public class {{classname}} {
+
+  private {{classname}}Service {{classVarName}}Service;
+
+  public {{classname}}Service get{{classname}}Service() {
+    return {{classVarName}}Service;
+  }
+
+
+  public void setPersonsService({{classname}}Service {{classVarName}}Service) {
+    this.{{classVarName}}Service = {{classVarName}}Service;
+  }
+
   {{#operation}}
   @{{httpMethod}}
   {{#subresourceOperation}}@Path("{{path}}"){{/subresourceOperation}}
@@ -37,8 +50,12 @@ public class {{classname}} {
   public Response {{nickname}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},
     {{/hasMore}}{{/allParams}})
       throws NotFoundException {
-      // do some magic!
-      return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    try {
+      return Response.ok().entity({{classVarName}}Service.{{nickname}}({{#allParams}}{{paramName}}{{#hasMore}},
+    {{/hasMore}}{{/allParams}})).build();
+    } catch ( Exception e ) {
+      return Response.serverError().entity(e.getMessage()).build();
+    }
   }
 
   {{/operation}}
