@@ -13,6 +13,7 @@ public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languag
 	protected String mainClass;
 	protected String applicationName;
 	protected String basePackage;
+	protected String appShortName;
 
 	public CodegenType getTag() {
 		return CodegenType.SERVER;
@@ -30,7 +31,8 @@ public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languag
 		super();
 		basePackage = "io.brillo";
 		servicesPackage = basePackage + ".core";
-		applicationName = "BIO";
+		this.applicationName = "Brillo";
+		this.appShortName = "brillo";
 		mainClass = basePackage + "." + applicationName + "Application";
 
 		init();
@@ -42,13 +44,22 @@ public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languag
 		additionalProperties.put("servicesPackage", servicesPackage);
 		additionalProperties.put("mainClass", mainClass);
 		additionalProperties.put("applicationName", applicationName);
+		additionalProperties.put("appShortName", appShortName);
 
+		// Dropwizard classes
 		supportingFiles.add(new SupportingFile("application.mustache",
 				(sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator),
 				applicationName + "Application.java"));
 		supportingFiles.add(new SupportingFile("configuration.mustache",
 				(sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator),
 				applicationName + "Configuration.java"));
+		supportingFiles.add(new SupportingFile("module.mustache",
+				(sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator),
+				applicationName + "Module.java"));
+
+		// Dropwizard and docker descriptors
+		supportingFiles.add(new SupportingFile("dropwizard.mustache", "", appShortName + ".yml"));
+		supportingFiles.add(new SupportingFile("docker.mustache", "", "Dockerfile"));
 	}
 
 	public String getServicesPackage() {
@@ -84,6 +95,15 @@ public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languag
 
 	public void setBasePackage(String basePackage) {
 		this.basePackage = basePackage;
+		init();
+	}
+
+	public String getAppShortName() {
+		return appShortName;
+	}
+
+	public void setAppShortName(String appShortName) {
+		this.appShortName = appShortName;
 		init();
 	}
 
