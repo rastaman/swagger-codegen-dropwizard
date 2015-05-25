@@ -1,0 +1,39 @@
+package {{basePackage}};
+
+import io.dropwizard.Application;
+import io.dropwizard.java8.Java8Bundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+
+public class {{applicationName}}Application extends Application<{{applicationName}}Configuration> {
+
+	public static void main(final String[] args) throws Exception {
+		new {{applicationName}}Application().run(args);
+	}
+
+	@Override
+	public String getName() {
+		return "{{applicationName}}";
+	}
+
+	@Override
+	public void initialize(final Bootstrap<{{applicationName}}Configuration> bootstrap) {
+		bootstrap.addBundle(new Java8Bundle());
+		bootstrap.addBundle(new SwaggerBundle<{{applicationName}}Configuration>() {
+
+			@Override
+			protected SwaggerBundleConfiguration getSwaggerBundleConfiguration({{applicationName}}Configuration configuration) {
+				return configuration.swaggerBundleConfiguration;
+			}
+
+		});
+	}
+
+	@Override
+	public void run(final {{applicationName}}Configuration configuration, final Environment environment) {
+		// TODO: implement application
+	}
+
+}
