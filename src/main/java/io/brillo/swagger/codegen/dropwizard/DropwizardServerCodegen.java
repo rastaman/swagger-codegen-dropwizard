@@ -2,9 +2,13 @@ package io.brillo.swagger.codegen.dropwizard;
 
 import java.io.File;
 
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Mustache.VariableFetcher;
 import com.wordnik.swagger.codegen.CodegenConfig;
+import com.wordnik.swagger.codegen.CodegenProperty;
 import com.wordnik.swagger.codegen.CodegenType;
 import com.wordnik.swagger.codegen.SupportingFile;
+import com.wordnik.swagger.models.properties.Property;
 
 public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languages.JaxRSServerCodegen
 		implements CodegenConfig {
@@ -34,7 +38,7 @@ public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languag
 		this.applicationName = "Brillo";
 		this.appShortName = "brillo";
 		mainClass = basePackage + "." + applicationName + "Application";
-
+		modelTemplateFiles.put("dao.mustache", "DAO.java");
 		init();
 	}
 
@@ -62,6 +66,14 @@ public class DropwizardServerCodegen extends com.wordnik.swagger.codegen.languag
 		supportingFiles.add(new SupportingFile("docker.mustache", "", "Dockerfile"));
 	}
 
+	@Override
+	public CodegenProperty fromProperty(String name, Property p) {
+		CodegenProperty cgp = super.fromProperty(name, p);
+		if ( "id".equals( name ) ) {
+			VariableFetcher vf = Mustache.compiler().collector.createFetcher(cgp, "idAnnotation");
+		}
+		return cgp;
+	}
 	public String getServicesPackage() {
 		return servicesPackage;
 	}

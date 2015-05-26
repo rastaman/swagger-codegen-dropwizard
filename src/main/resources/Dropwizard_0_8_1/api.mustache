@@ -43,6 +43,11 @@ public class {{classname}} {
 
   }
 
+  public {{classname}}(I{{classname}}Service {{classVarName}}Service) {
+    super();
+    this.{{classVarName}}Service = {{classVarName}}Service;
+  }
+
   {{#operation}}
   @{{httpMethod}}
   {{#subresourceOperation}}@Path("{{path}}"){{/subresourceOperation}}

@@ -5,12 +5,18 @@ package {{package}};
 
 import com.wordnik.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
+
+import javax.persistence.*;
+
 {{#models}}
 
 {{#model}}{{#description}}
 /**
  * {{description}}
  **/{{/description}}
+@Entity
+@Table(name = "{{classVarName}}")
 @ApiModel(description = "{{{description}}}")
 public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
   {{#vars}}{{#isEnum}}
